@@ -1,9 +1,15 @@
 # Beacon release review
 
 ## Pipeline audit
-Gap / risk / repaired dependency:
-Production reviewer control to configure (not demonstrated locally):
-Secret handling and scope:
+Gap: production could run without the validation job completing first.
+Risk: an unvalidated release could reach the production review stage.
+Fix: `production` now uses `needs: validate` in `.github/workflows/release.yml`.
+Approval remains required in the production environment; this local check does not prove approval or deployment.
+
+## Image and rollback audit
+Gap: deployment used mutable `latest`, and rollback pointed to the candidate image.
+Risk: the deployed image could change unexpectedly, and rollback could repeat the failed release.
+Fix: deployment is pinned to `beacon-service:v2.3.1`; rollback targets known-good `beacon-service:v2.3.0`.
 
 ## Traceability
 Why PATCH is appropriate:
